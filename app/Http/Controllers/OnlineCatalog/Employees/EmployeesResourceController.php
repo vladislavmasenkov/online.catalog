@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Employee;
 
-class EmployeesController extends Controller
+class EmployeesResourceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,9 +17,13 @@ class EmployeesController extends Controller
      */
     public function index()
     {
-        $employee = Employee::find(2);
-        $positions = Position::all()->where('id','<>',$employee->position);
-        dump([$employee->toArray(),$positions]);
+        $employees = Employee::with('position');
+        $orderby = \Request::query('orderby');
+        if($orderby) {
+            $employees->orderBy($orderby);
+        }
+        $employees = $employees->paginate(10);
+        dump($employees,$employees->items());
     }
 
     /**
@@ -29,7 +33,7 @@ class EmployeesController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**

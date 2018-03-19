@@ -19,6 +19,6 @@ class Employee extends Model
         ];
 
     public function position() {
-        return $this->hasOne('App\Position','position','id');
+        return $this->hasOne('App\Position','id','position');
     }
 }

@@ -15,4 +15,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('employees','OnlineCatalog\Employees\EmployeesController');
+Route::resource('employees','OnlineCatalog\Employees\EmployeesResourceController');

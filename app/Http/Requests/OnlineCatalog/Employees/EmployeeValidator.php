@@ -33,4 +33,17 @@ class EmployeeValidator extends FormRequest
             'director' => 'nullable|exists:employees,id'
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'first_name.required' => \Lang::get('firstNameIsRequiredField'),
+            'last_name.required' => \Lang::get('lastNameIsRequiredField'),
+            'avatar.max' => \Lang::get('avatarMaxLengthField'),
+            'employment_date.date' => \Lang::get('employmentDateIsDateType'),
+            'position.exists' => \Lang::get('positionNotFoundInPositions'),
+            'position.required' => \Lang::get('positionIsRequiredField'),
+            'director.exists' => \Lang::get('directorNotFoundInEmployees')
+        ];
+    }
 }
