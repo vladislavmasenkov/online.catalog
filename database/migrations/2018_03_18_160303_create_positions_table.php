@@ -20,7 +20,7 @@ class CreatePositionsTable extends Migration
         });
 
         Schema::table('employees',function (Blueprint $table) {
-            $table->foreign('position')->references('id')->on('positions');
+            $table->foreign('position_id')->references('id')->on('positions');
         });
     }
 
@@ -32,7 +32,7 @@ class CreatePositionsTable extends Migration
     public function down()
     {
         Schema::table('employees',function (Blueprint $table) {
-            $table->dropForeign(['position']);
+            $table->dropForeign(['position_id']);
         });
         Schema::dropIfExists('positions');
     }

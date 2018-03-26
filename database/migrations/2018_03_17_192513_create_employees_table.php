@@ -18,14 +18,15 @@ class CreateEmployeesTable extends Migration
             $table->string('first_name',255);
             $table->string('last_name',255);
             $table->string('middle_name',255)->nullable();
-            $table->integer('position')->unsigned();
+            $table->integer('position_id')->unsigned();
             $table->string('avatar',255)->nullable();
             $table->date('employment_date');
-            $table->integer('director')->unsigned()->nullable();
+            $table->integer('director_id')->unsigned()->nullable();
+            $table->integer('wage')->unsigned()->default(1000);
             $table->timestamps();
         });
         Schema::table('employees', function (Blueprint $table) {
-            $table->foreign('director')->references('id')->on('employees');
+            $table->foreign('director_id')->references('id')->on('employees');
         });
     }
 
@@ -37,7 +38,7 @@ class CreateEmployeesTable extends Migration
     public function down()
     {
         Schema::table('employees', function (Blueprint $table) {
-            $table->dropForeign(['director']);
+            $table->dropForeign(['director_id']);
         });
         Schema::dropIfExists('employees');
     }

@@ -11,8 +11,8 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'OnlineCatalog\Employees\EmployeesFrontendController@index');
+Route::get('/employees/{id}/workers', 'OnlineCatalog\Employees\EmployeesFrontendController@workers')
+    ->where('id','[0-9]+');
 
-Route::resource('employees','OnlineCatalog\Employees\EmployeesResourceController');
+Route::resource('employees', 'OnlineCatalog\Employees\EmployeesResourceController');

@@ -1,0 +1,150 @@
+body html {
+    margin:0;
+    padding: 0;
+}
+.panel-body {
+    padding: 10px;
+}
+
+.employee-cart img{
+    width: 100%;
+    height: auto;
+}
+
+.employee-cart .employee-name {
+    font-weight: 600;
+    font-size: 24px;
+}
+
+.employee-cart .employee-position {
+    font-size: 14px;
+    color: #838383;
+}
+
+.employee-cart .employment-date {
+    padding-top: 10px;
+
+}
+
+.employee-cart .employment-date span {
+    font-weight: 600;
+}
+
+.employees-list-item {
+    width:100%;
+    line-height: 150%;
+    cursor: pointer;
+}
+
+
+
+.employees-list-item .employee-item-chekbox {
+    width: 3%;
+    text-align: center;
+    z-index:1;
+}
+
+.employees-list-item .employee-item-id {
+    width: 3%;
+    text-align: center;
+}
+.employees-list-item .employee-item-avatar {
+    width: 10%;
+    text-align: center;
+}
+
+.employees-list-item .employee-item-name {
+    width: 30%;
+}
+
+.employees-list-item .employee-item-position {
+    width: 20%;
+}
+
+.employees-list-item .employee-item-wage {
+    width: 10%;
+}
+.employees-list-item .employee-item-employment-date {
+    width: 10%;
+}
+
+.employees-list-item .employee-item-director {
+    width: 10%;
+}
+.pagination-center {
+    padding: 10px 0px 5px 0px;
+    width: auto;
+    margin: auto;
+}
+
+.employees-columns .navbar {
+    padding: 8px 20px;
+}
+
+.employees-navbar {
+    background: #f2f2f2;
+}
+
+.employees-navbar .item-order {
+    position: relative;
+    color: #6b6b6b
+}
+
+.employees-navbar .item-order:hover {
+    color: #252525;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.employees-navbar .active {
+    color: #0a0a0a;
+    font-weight: 500;
+}
+
+.active.desc:after {
+    content: '>';
+    display: inline-block;
+    position: absolute;
+    margin-left: 10px;
+    moz-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+.active.asc:after {
+    content: '<';
+    margin-left: 10px;
+    display: inline-block;
+    position: absolute;
+    moz-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+#notifies {
+    position:fixed;
+    z-index: 1;
+    width:auto;
+    height:auto;
+    bottom:0;
+    left:0;
+}
+
+
+.navbar-action-list-btn .action-btn i{
+    width:35px;
+    height: 20px;
+}
+
+.navbar-action-list-btn .action-btn{
+    color: #707070;
+    font-size: 20px;
+    text-align: center;
+}
+
+.navbar-action-list-btn .action-btn:hover {
+    cursor: pointer;
+    color: #7ba6fa;
+}

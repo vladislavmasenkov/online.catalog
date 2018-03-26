@@ -7,6 +7,7 @@ use App\Position;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Employee;
+use Illuminate\Support\Facades\Input;
 
 class EmployeesResourceController extends Controller
 {
@@ -15,15 +16,25 @@ class EmployeesResourceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $employees = Employee::with('position');
-        $orderby = \Request::query('orderby');
-        if($orderby) {
-            $employees->orderBy($orderby);
+        $orderby = $request->input('orderby');
+        $order = ($request->get('order') == 'asc')?'asc':'desc';
+        $filters = $request->get('filters');
+
+        $employees = Employee::getAllWithPagintaion(20,$orderby,$order,$filters);
+
+        if($request->ajax()) {
+            return view('onlinecatalog.employees.resource.ajaxlist',[
+                'employees' => $employees,
+            ])->render();
         }
-        $employees = $employees->paginate(10);
-        dump($employees,$employees->items());
+        return view('onlinecatalog.employees.resource.index',[
+            'employees' => $employees->appends(request()->only(['page'])),
+            'order' => $order,
+            'orderby' => $orderby,
+            'filter' => $filters
+        ]);
     }
 
     /**
@@ -33,7 +44,15 @@ class EmployeesResourceController extends Controller
      */
     public function create()
     {
-
+        $positions = Position::all();
+        if(request()->ajax()) {
+            return view('onlinecatalog.employees.resource.ajaxcreate', [
+                'positions' => $positions
+            ])->render();
+        }
+        return view('onlinecatalog.employees.resource.create', [
+            'positions' => $positions
+        ]);
     }
 
     /**
@@ -44,8 +63,22 @@ class EmployeesResourceController extends Controller
      */
     public function store(EmployeeValidator $request)
     {
-
-
+        $employee = new Employee();
+        $employee->fill([
+            'first_name' => $request->input('first_name'),
+            'last_name' => $request->input('last_name'),
+            'middle_name' => $request->input('middle_name'),
+            'position_id' => $request->input('position_id'),
+            'avatar' => $request->input('avatar'),
+            'wage' => $request->input('wage'),
+            'employment_date' => $request->input('employment_date'),
+            'director_id' => ($request->input('director_id'))?$request->input('director_id'):NULL
+        ]);
+        $employee->save();
+        return response()->json([
+            'success' => true,
+            'message' => \Lang::get('messages.SuccessEmployeeStore')
+        ]);
     }
 
     /**
@@ -56,8 +89,10 @@ class EmployeesResourceController extends Controller
      */
     public function show($id)
     {
-        $employee = Employee::find($id)->toArray();
-        return view('employees.show',['employee' => $employee]);
+        $employee = Employee::getEmployeeById($id);
+        return view('onlinecatalog.employees.resource.show', [
+            'employee' => $employee
+        ]);
     }
 
     /**
@@ -68,9 +103,18 @@ class EmployeesResourceController extends Controller
      */
     public function edit($id)
     {
-        $employee = Employee::find($id)->with('position');
-        $positions = Position::all()->where('id','!=',$employee->position->id);
-        dump([$employee,$positions]);
+        $employee = Employee::getEmployeeById($id);
+        $positions = Position::where('id','<>',$employee->position->id)->get();
+        if(request()->ajax()) {
+            return view('onlinecatalog.employees.resource.ajaxedit', [
+                'employee' => $employee,
+                'positions' => $positions
+            ])->render();
+        }
+        return view('onlinecatalog.employees.resource.edit', [
+            'employee' => $employee,
+            'positions' => $positions
+        ]);
     }
 
     /**
@@ -87,21 +131,22 @@ class EmployeesResourceController extends Controller
             $employee->fill([
                 'first_name' => $request->input('first_name'),
                 'last_name' => $request->input('last_name'),
-                'midlle_name' => $request->input('midlle_name'),
-                'position' => $request->input('position'),
+                'middle_name' => $request->input('middle_name'),
+                'position_id' => $request->input('position_id'),
                 'avatar' => $request->input('avatar'),
+                'wage' => $request->input('wage'),
                 'employment_date' => $request->input('employment_date'),
-                'director' => $request->input('director'),
+                'director_id' => ($request->input('director_id'))?$request->input('director_id'):NULL
             ]);
             $employee->save();
             return response()->json([
                 'success' => true,
-                'message' => \Lang::get('SuccessEmployeeUpdate')
+                'message' => \Lang::get('messages.SuccessEmployeeUpdate')
             ]);
         }
         return response()->json([
             'success' => false,
-            'message' => \Lang::get('FailEmployeeUpdate')
+            'message' => \Lang::get('messages.FailEmployeeUpdate')
         ]);
     }
 
@@ -117,12 +162,12 @@ class EmployeesResourceController extends Controller
             Employee::destroy([$id]);
             return response()->json([
                 'success' => true,
-                'message' => \Lang::get('SuccessEmployeeDestroy')
+                'message' => \Lang::get('messages.SuccessEmployeeDestroy')
             ]);
         }
         return response()->json([
             'success' => false,
-            'message' => \Lang::get('FailEmployeeDestroy')
+            'message' => \Lang::get('messages.FailEmployeeDestroy')
         ]);
     }
 }

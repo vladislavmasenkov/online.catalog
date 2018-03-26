@@ -13,7 +13,7 @@ class EmployeeValidator extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,26 +24,31 @@ class EmployeeValidator extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => 'reqired|max:255',
+            'first_name' => 'required|max:255',
             'last_name' => 'required|max:255',
-            'middle_name' => 'max:255',
+            'middle_name' => 'nullable|max:255',
             'avatar' => 'nullable|max:255',
-            'position' => 'required|exists:positions,id',
+            'position_id' => 'required|exists:positions,id|integer',
             'employment_date' => 'date',
-            'director' => 'nullable|exists:employees,id'
+            'wage' => 'required|integer',
+            'director_id' => 'nullable'
         ];
     }
 
     public function messages()
     {
         return [
-            'first_name.required' => \Lang::get('firstNameIsRequiredField'),
-            'last_name.required' => \Lang::get('lastNameIsRequiredField'),
-            'avatar.max' => \Lang::get('avatarMaxLengthField'),
-            'employment_date.date' => \Lang::get('employmentDateIsDateType'),
-            'position.exists' => \Lang::get('positionNotFoundInPositions'),
-            'position.required' => \Lang::get('positionIsRequiredField'),
-            'director.exists' => \Lang::get('directorNotFoundInEmployees')
+            'first_name.required' => \Lang::get('validation.firstNameIsRequiredField'),
+            'last_name.required' => \Lang::get('validation.lastNameIsRequiredField'),
+            'first_name.max' => \Lang::get('validation.firstNameMaxLengthField'),
+            'last_name.max' => \Lang::get('validation.lastNameMaxLengthField'),
+            'avatar.max' => \Lang::get('validation.avatarMaxLengthField'),
+            'employment_date.date' => \Lang::get('validation.employmentDateMustBeDate'),
+            'position_id.exists' => \Lang::get('validation.positionNotFoundInPositions'),
+            'position_id.required' => \Lang::get('validation.positionIsRequiredField'),
+            'wage.required' => \Lang::get('validation.wageIsRequiredField'),
+            'wage.integer' => \Lang::get('validation.wageMustBeInteger')
         ];
     }
+
 }
