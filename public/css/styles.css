@@ -1,15 +1,29 @@
 body html {
-    margin:0;
+    margin: 0;
     padding: 0;
 }
-.panel-body {
+
+.main-block {
+    margin-top: 20px;
+}
+
+.card-body {
     padding: 10px;
 }
 
-.employee-cart img{
+.employees-list .card {
+    margin-bottom: 5px;
+}
+
+.card .card-header a {
+    color: #292929;
+}
+
+.employee-cart img {
     width: 100%;
     height: auto;
 }
+
 
 .employee-cart .employee-name {
     font-weight: 600;
@@ -30,27 +44,87 @@ body html {
     font-weight: 600;
 }
 
+.employee-cart .employee-wage span {
+    font-weight: 600;
+}
+
+.employee-form-edit .employee-avatar {
+    text-align: center;
+}
+
+.employee-form-edit .employee-avatar img {
+    width: 40%;
+    border-radius: 50%;
+    border: 3px dashed #fff;
+}
+.employee-form-edit #input-director {
+    position: relative;
+}
+
+.employee-form-edit #input-director:hover {
+    cursor: pointer;
+}
+.employee-form-edit #input-director i{
+    position: absolute;
+    right: 10px;
+    height: 100%;
+    top: 10px;
+}
+
+.employee-form-create .employee-avatar:hover img {
+    border: 3px dashed #61aafa;
+    transition: all .3s;
+}
+
+.employee-form-create .employee-avatar {
+    text-align: center;
+}
+
+.employee-form-create .employee-avatar img {
+    width: 40%;
+    border-radius: 50%;
+    border: 3px dashed #fff;
+}
+
+.employee-form-edit .employee-avatar:hover img {
+    border: 3px dashed #61aafa;
+    transition: all .3s;
+}
+
+#employee-btn-delete {
+    position: absolute;
+    left: 0;
+    margin-left: 16px;
+}
+
 .employees-list-item {
-    width:100%;
+    width: 100%;
     line-height: 150%;
     cursor: pointer;
 }
 
-
+.employees-list-item .d-inline-block {
+    vertical-align: middle;
+}
 
 .employees-list-item .employee-item-chekbox {
     width: 3%;
     text-align: center;
-    z-index:1;
 }
 
 .employees-list-item .employee-item-id {
     width: 3%;
     text-align: center;
 }
+
 .employees-list-item .employee-item-avatar {
     width: 10%;
     text-align: center;
+}
+
+.employees-list-item .employee-item-avatar img {
+    width: 40%;
+    border-radius: 50%;
 }
 
 .employees-list-item .employee-item-name {
@@ -64,6 +138,7 @@ body html {
 .employees-list-item .employee-item-wage {
     width: 10%;
 }
+
 .employees-list-item .employee-item-employment-date {
     width: 10%;
 }
@@ -71,6 +146,7 @@ body html {
 .employees-list-item .employee-item-director {
     width: 10%;
 }
+
 .pagination-center {
     padding: 10px 0px 5px 0px;
     width: auto;
@@ -94,6 +170,48 @@ body html {
     color: #252525;
     font-weight: 500;
     cursor: pointer;
+}
+
+#filter-input {
+    width: auto;
+    border: none;
+    outline: none;
+    padding: 4px 10px 4px 10px;
+    margin-top: 4px;
+}
+
+#filter-tags .item-tags {
+    margin-right: 10px;
+    background-color: #2e90ff;
+    padding: 4px 10px 4px 10px;
+    color: #ffffff;
+    margin-top: 4px;
+}
+
+#filter-tags .item-tags span {
+    vertical-align: middle;
+    margin-left: 5px;
+}
+
+#filter-fields {
+    position: absolute;
+    border: 1px solid #999999;
+    min-width: 250px;
+    height: auto;
+    background-color: #ffffff;
+    z-index: 2;
+}
+
+#filter-fields .fields-item {
+    padding: 5px 20px 5px 20px;
+    border-bottom: 1px solid #dddddd;
+    color: #636363;
+    font-weight: 600;
+}
+
+#filter-fields .fields-item:hover {
+    background-color: #2e90ff;
+    color: #ffffff;
 }
 
 .employees-navbar .active {
@@ -124,21 +242,20 @@ body html {
 }
 
 #notifies {
-    position:fixed;
+    position: fixed;
     z-index: 1;
-    width:auto;
-    height:auto;
-    bottom:0;
-    left:0;
+    width: auto;
+    height: auto;
+    bottom: 0;
+    left: 0;
 }
 
-
-.navbar-action-list-btn .action-btn i{
-    width:35px;
+.navbar-action-list-btn .action-btn i {
+    width: 35px;
     height: 20px;
 }
 
-.navbar-action-list-btn .action-btn{
+.navbar-action-list-btn .action-btn {
     color: #707070;
     font-size: 20px;
     text-align: center;
@@ -147,4 +264,30 @@ body html {
 .navbar-action-list-btn .action-btn:hover {
     cursor: pointer;
     color: #7ba6fa;
+}
+
+#employee-director-modal .modal-content {
+    box-shadow: 0px 0px 300px 40px #3e3e3e;
+}
+
+.director-list-item .employee-item-id {
+    width:7%
+}
+
+.director-list-item .employee-item-avatar {
+    width:5%
+}
+.director-list-item .employee-item-avatar img {
+    width: 100%;
+    border-radius: 50%;
+}
+.director-list-item .employee-item-name {
+    width:45%;
+    padding-left: 10px;
+}
+.director-list-item .employee-item-position {
+    width:40%
+}
+.director-list-item:hover {
+    cursor: pointer;
 }

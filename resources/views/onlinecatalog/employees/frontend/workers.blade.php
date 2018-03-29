@@ -1,5 +1,5 @@
 @if($employee)
-    <div class="panel">
+    <div class="card">
         <div class="row employee-cart">
             <div class="col-md-2 col-xs-4">
                 <img src="@if($employee->avatar){{ asset('images/onlinecatalog/employees/'.$employee->avatar)}}
@@ -9,6 +9,7 @@
                 <div class="employee-name">{{$employee->first_name}} {{$employee->last_name}}</div>
                 <div class="employee-position">{{$employee->position->name}} </div>
                 <div class="employment-date">Дата приема на работу: <span>{{$employee->employment_date}}</span></div>
+                <div class="employee-wage">Заработная плата: <span>${{$employee->wage}}</span></div>
             </div>
         </div>
     </div>
@@ -16,20 +17,18 @@
 
 @if($workers)
     @foreach($workers as $worker)
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#acordion"
-                       href="#employee-{{$worker->id}}-workers" data-employee-id="{{$worker->id}}">
-                        <span class="glyphicon glyphicon-user"></span>
-                        <strong>{{$worker->first_name}} {{$worker->last_name}}</strong>
-                        {{$worker->position->name}}
-                    </a>
-                </h4>
+        <div class="card card-default">
+            <div class="card-header">
+                <a data-toggle="collapse" data-parent="#acordion"
+                   href="#employee-{{$worker->id}}-workers" data-employee-id="{{$worker->id}}">
+                    <span class="glyphicon glyphicon-user"></span>
+                    <strong>{{$worker->first_name}} {{$worker->last_name}}</strong>
+                    {{$worker->position->name}}
+                </a>
             </div>
             <div id="employee-{{$worker->id}}-workers"
-                 class="panel-collapse collapse">
-                <div class="panel-body">
+                 class="card-collapse collapse">
+                <div class="card-body">
                 </div>
             </div>
         </div>

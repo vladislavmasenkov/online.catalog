@@ -10,9 +10,19 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Auth::routes();
 
 Route::get('/', 'OnlineCatalog\Employees\EmployeesFrontendController@index');
 Route::get('/employees/{id}/workers', 'OnlineCatalog\Employees\EmployeesFrontendController@workers')
-    ->where('id','[0-9]+');
+    ->where('id', '[0-9]+');
 
-Route::resource('employees', 'OnlineCatalog\Employees\EmployeesResourceController');
+
+
+Route::group(['middleware' => ['auth']], function () {
+    Route::delete('employees/destroy', 'OnlineCatalog\Employees\EmployeesResourceController@destroyMany')
+        ->name('employees.destroymany');
+    Route::get('employees/directors/{id?}', 'OnlineCatalog\Employees\EmployeesResourceController@directors')
+        ->name('employees.directors');
+    Route::resource('employees', 'OnlineCatalog\Employees\EmployeesResourceController');
+});
+

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\OnlineCatalog\Employees;
 
 use App\Http\Requests\OnlineCatalog\Employees\EmployeeValidator;
 use App\Position;
+use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Employee;
@@ -19,17 +20,18 @@ class EmployeesResourceController extends Controller
     public function index(Request $request)
     {
         $orderby = $request->input('orderby');
-        $order = ($request->get('order') == 'asc')?'asc':'desc';
-        $filters = $request->get('filters');
+        $order = ($request->get('order') == 'asc') ? 'asc' : 'desc';
+        $filters = json_decode($request->input('filters'),true);
 
-        $employees = Employee::getAllWithPagintaion(20,$orderby,$order,$filters);
 
-        if($request->ajax()) {
-            return view('onlinecatalog.employees.resource.ajaxlist',[
+        $employees = Employee::getAllWithPagintaion(20, $orderby, $order, $filters);
+
+        if ($request->ajax()) {
+            return view('onlinecatalog.employees.resource.ajaxlist', [
                 'employees' => $employees,
             ])->render();
         }
-        return view('onlinecatalog.employees.resource.index',[
+        return view('onlinecatalog.employees.resource.index', [
             'employees' => $employees->appends(request()->only(['page'])),
             'order' => $order,
             'orderby' => $orderby,
@@ -45,7 +47,7 @@ class EmployeesResourceController extends Controller
     public function create()
     {
         $positions = Position::all();
-        if(request()->ajax()) {
+        if (request()->ajax()) {
             return view('onlinecatalog.employees.resource.ajaxcreate', [
                 'positions' => $positions
             ])->render();
@@ -69,10 +71,10 @@ class EmployeesResourceController extends Controller
             'last_name' => $request->input('last_name'),
             'middle_name' => $request->input('middle_name'),
             'position_id' => $request->input('position_id'),
-            'avatar' => $request->input('avatar'),
             'wage' => $request->input('wage'),
             'employment_date' => $request->input('employment_date'),
-            'director_id' => ($request->input('director_id'))?$request->input('director_id'):NULL
+            'director_id' => ($request->input('director_id')) ? $request->input('director_id') : NULL,
+            'avatar' => Employee::uploadEmployeeImg($request->file('avatar'))
         ]);
         $employee->save();
         return response()->json([
@@ -104,8 +106,8 @@ class EmployeesResourceController extends Controller
     public function edit($id)
     {
         $employee = Employee::getEmployeeById($id);
-        $positions = Position::where('id','<>',$employee->position->id)->get();
-        if(request()->ajax()) {
+        $positions = Position::where('id', '<>', $employee->position->id)->get();
+        if (request()->ajax()) {
             return view('onlinecatalog.employees.resource.ajaxedit', [
                 'employee' => $employee,
                 'positions' => $positions
@@ -127,16 +129,16 @@ class EmployeesResourceController extends Controller
     public function update(EmployeeValidator $request, $id)
     {
         $employee = Employee::find($id);
-        if($employee) {
+        if ($employee) {
             $employee->fill([
                 'first_name' => $request->input('first_name'),
                 'last_name' => $request->input('last_name'),
                 'middle_name' => $request->input('middle_name'),
                 'position_id' => $request->input('position_id'),
-                'avatar' => $request->input('avatar'),
                 'wage' => $request->input('wage'),
                 'employment_date' => $request->input('employment_date'),
-                'director_id' => ($request->input('director_id'))?$request->input('director_id'):NULL
+                'director_id' => ($request->input('director_id')) ? $request->input('director_id') : NULL,
+                'avatar' => Employee::uploadEmployeeImg($request->file('avatar'))
             ]);
             $employee->save();
             return response()->json([
@@ -158,7 +160,8 @@ class EmployeesResourceController extends Controller
      */
     public function destroy($id)
     {
-        if (Employee::find($id)) {
+        $employee = Employee::getEmployeeById($id);
+        if ($employee) {
             Employee::destroy([$id]);
             return response()->json([
                 'success' => true,
@@ -168,6 +171,39 @@ class EmployeesResourceController extends Controller
         return response()->json([
             'success' => false,
             'message' => \Lang::get('messages.FailEmployeeDestroy')
+        ]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroyMany(Request $request) {
+        $ids = explode(',',$request->input('ids'));
+        if($ids && $request->input('ids')) {
+            Employee::destroy($ids);
+            return response()->json([
+                'success' => true,
+                'message' => \Lang::get('messages.SuccessEmployeeDestroyMany')
+            ]);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => \Lang::get('messages.FailEmployeeDestroyMany')
+        ]);
+    }
+
+    public function directors(Request $request,$id) {
+        $directors = Employee::getPossibleDirectors($id,7);
+        if(request()->ajax()) {
+            return view('onlinecatalog.employees.resource.ajaxdirectors',[
+                'employees' => $directors
+            ])->render();
+        }
+        return view('onlinecatalog.employees.resource.ajaxdirectors',[
+            'employees' => $directors
         ]);
     }
 }

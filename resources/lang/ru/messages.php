@@ -7,6 +7,8 @@ return [
     'SuccessEmployeeUpdate' => 'Запись успешноо обновлена',
     'FailEmployeeUpdate' => 'Ошибка обновления записи',
     'SuccessEmployeeDestroy' => 'Запись успешно удалена',
-    'FailEmployeeDestroy' => 'Ошибка удаления записи'
+    'FailEmployeeDestroy' => 'Ошибка удаления записи',
+    'SuccessEmployeeDestroyMany' => 'Выбраные записи успешно удалены',
+    'FailEmployeeDestroyMany' => 'Ошибка удаление записей'
 
 ];
