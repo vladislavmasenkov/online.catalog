@@ -27,7 +27,7 @@
                 </a>
             </div>
             <div id="employee-{{$worker->id}}-workers"
-                 class="card-collapse collapse">
+                 class="employee-workers card-collapse collapse">
                 <div class="card-body">
                 </div>
             </div>

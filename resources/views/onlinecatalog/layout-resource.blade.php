@@ -17,7 +17,6 @@
     <div id="employee-card-modal" class="modal fade" role="form"></div>
     <div id="employee-director-modal" class="modal fade modal-md" role="dialog"></div>
 @show
-<div id="notifies"></div>
 <script>
     $(document).ready(function () {
 
@@ -239,50 +238,11 @@
             });
         }
 
-        function showErrorMessages(xhr) {
-            var json = JSON.parse(xhr.responseText);
-            for (var key in json.errors) {
-                if (json.errors.hasOwnProperty(key)) {
-                    json.errors[key].forEach(function (val) {
-                        Notify.generate(val, 'Ошибка', 3);
-                    });
-                }
-            }
-        }
-
-        Notify = {
-            TYPE_INFO: 0,
-            TYPE_SUCCESS: 1,
-            TYPE_WARNING: 2,
-            TYPE_DANGER: 3,
-
-            generate: function (aText, aOptHeader, aOptType_int) {
-                var lTypeIndexes = [this.TYPE_INFO, this.TYPE_SUCCESS, this.TYPE_WARNING, this.TYPE_DANGER];
-                var ltypes = ['alert-info', 'alert-success', 'alert-warning', 'alert-danger'];
-                var ltype = ltypes[this.TYPE_INFO];
-
-                if (aOptType_int !== undefined && lTypeIndexes.indexOf(aOptType_int) !== -1) {
-                    ltype = ltypes[aOptType_int];
-                }
-
-                var lText = '';
-                if (aOptHeader) {
-                    lText += '<strong>' + aOptHeader + '</strong> ';
-                }
-                lText += aText;
-                var lNotify_e = $("<div class='alert " + ltype + "'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>×</span></button>" + lText + "</div>");
-
-                setTimeout(function () {
-                    lNotify_e.alert('close');
-                }, 10000);
-                lNotify_e.appendTo($("#notifies"));
-            }
-        };
 
         Search = {
             input: null,
             tagsblock: null,
-            fieldsblock:null,
+            fieldsblock: null,
             fields: {
                 id: {
                     name: 'ID',
@@ -314,13 +274,13 @@
                     name: 'Зарплата',
                     type: ['number']
                 },
-                employment_date:{
+                employment_date: {
                     name: 'Дата',
                     type: ['string']
                 }
             },
             selected: {},
-            init: function (input, tagsblock,fieldsblock) {
+            init: function (input, tagsblock, fieldsblock) {
                 this.input = input;
                 this.tagsblock = tagsblock;
                 this.fieldsblock = fieldsblock;
@@ -330,7 +290,7 @@
             },
             onChangeInput: function () {
                 $(this.input).on('input', function () {
-                    if($(this).val()) {
+                    if ($(this).val()) {
                         var selectItems = {};
                         for (field in Search.fields) {
                             if (isFinite($(this).val()) && $.inArray('number', Search.fields[field].type) !== -1) {
@@ -351,30 +311,30 @@
                 });
             },
             onSelectField: function () {
-                $(this.fieldsblock).on('click','.fields-item',function(){
-                    if(Search.selected[$(this).attr('name')]) {
+                $(this.fieldsblock).on('click', '.fields-item', function () {
+                    if (Search.selected[$(this).attr('name')]) {
                         Search.selected[$(this).attr('name')].queries.push(Search.input.val());
                     } else {
                         Search.selected[$(this).attr('name')] = Search.fields[$(this).attr('name')];
                         Search.selected[$(this).attr('name')].queries = [];
                         Search.selected[$(this).attr('name')].queries.push(Search.input.val());
                     }
-                    Search.addTag($(this).attr('name'),Search.input.val());
+                    Search.addTag($(this).attr('name'), Search.input.val());
                     Search.fieldsblock.prop('hidden', true);
                     Search.input.val('');
                 });
             },
-            addTag: function (field_name,query) {
-                this.tagsblock.append('<div  class="item-tags d-inline-block" data-name="'+field_name+'" data-query="'+query+'">'+query+'<span class="fa fa-close"></span></div>');
+            addTag: function (field_name, query) {
+                this.tagsblock.append('<div  class="item-tags d-inline-block" data-name="' + field_name + '" data-query="' + query + '">' + query + '<span class="fa fa-close"></span></div>');
                 $('input#page').val(1);
                 reloadList();
             },
-            deleteTags: function() {
-                $(this.tagsblock).on('click','.item-tags span',function() {
+            deleteTags: function () {
+                $(this.tagsblock).on('click', '.item-tags span', function () {
                     Search.selected[$(this).parent('.item-tags').data('name')].queries.splice(
                         Search.selected[$(this).parent('.item-tags').data('name')].queries.indexOf(
                             $(this).parent('item-tags').data('query')), 1);
-                    if(Search.selected[$(this).parent('.item-tags').data('name')].queries.length === 0) {
+                    if (Search.selected[$(this).parent('.item-tags').data('name')].queries.length === 0) {
                         delete Search.selected[$(this).parent('.item-tags').data('name')];
                     }
                     $(this).parent('.item-tags').remove();
@@ -389,8 +349,53 @@
             }
         };
 
-        Search.init($('input#filter-input'), $('div#filter-tags'),$('div#filter-fields'));
+        Search.init($('input#filter-input'), $('div#filter-tags'), $('div#filter-fields'));
+
+
+        $(document).on('click', '.employee-form #input-director input,i.search-btn', function () {
+            var employeeid = $(this).parents('.employee-form').data('employee-id');
+            $.ajax({
+                method: 'GET',
+                url: 'employees/' + employeeid + '/directors',
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}'
+                }
+            }).done(function (result) {
+                $('#employee-director-modal').html(result);
+                $('#employee-director-modal').modal('show');
+            }).fail(function (result) {
+                showErrorMessages(result);
+            });
+        });
+
+        $(document).on('click', '.employee-form #input-director i.delete-btn', function () {
+            $('#input-director input').data('directorid', 0);
+            $('#input-director input').val('');
+        });
+
+        $(document).on('click', '#employee-director-modal li.director-list-item', function (event) {
+            $('#input-director input').data('directorid', $(this).data('employee-id'));
+            $('#input-director input').val($(this).find('.employee-item-name').text());
+            $('#employee-director-modal').modal('hide');
+        });
+
+        $(document).on('click', '#employee-director-modal .pagination a', function (event) {
+            event.preventDefault();
+            $.ajax({
+                method: 'GET',
+                url: $(this).prop('href'),
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}'
+                }
+            }).done(function (result) {
+                $('#employee-director-modal').html(result);
+            }).fail(function (result) {
+                showErrorMessages(result);
+            });
+        });
 
     });
+
+
 </script>
 @endsection

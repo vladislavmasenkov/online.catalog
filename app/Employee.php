@@ -36,6 +36,15 @@ class Employee extends Model
                 }
             }
         });
+
+        Employee::updating(function($employee){
+            if(!$employee->getOriginal('director_id')) {
+                $workers = Employee::getEmployeeWorkers($employee);
+                foreach ($workers as $worker) {
+                    $worker->director()->dissociate()->save();
+                }
+            }
+        });
     }
 
     public function position()
@@ -100,7 +109,10 @@ class Employee extends Model
     {
         $employees = self::with('position')->with('director')
             ->where('id', '<>', $id)
-            ->where('director_id','<>',$id)
+            ->where(function($query) use ($id) {
+                $query->where('director_id','<>',$id)
+                    ->orWhere('director_id',NULL);
+            })
             ->paginate($perPage);
         return $employees;
     }

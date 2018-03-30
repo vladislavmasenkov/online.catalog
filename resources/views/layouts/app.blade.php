@@ -77,6 +77,51 @@
     <main class="main-block">
         @yield('content')
     </main>
+    <div id="notifies"></div>
+    <script>
+        Notify = {
+            TYPE_INFO: 0,
+            TYPE_SUCCESS: 1,
+            TYPE_WARNING: 2,
+            TYPE_DANGER: 3,
+
+            generate: function (aText, aOptHeader, aOptType_int) {
+                var lTypeIndexes = [this.TYPE_INFO, this.TYPE_SUCCESS, this.TYPE_WARNING, this.TYPE_DANGER];
+                var ltypes = ['alert-info', 'alert-success', 'alert-warning', 'alert-danger'];
+                var ltype = ltypes[this.TYPE_INFO];
+
+                if (aOptType_int !== undefined && lTypeIndexes.indexOf(aOptType_int) !== -1) {
+                    ltype = ltypes[aOptType_int];
+                }
+
+                var lText = '';
+                if (aOptHeader) {
+                    lText += '<strong>' + aOptHeader + '</strong> ';
+                }
+                lText += aText;
+                var lNotify_e = $("<div class='alert " + ltype + "'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>×</span></button>" + lText + "</div>");
+
+                setTimeout(function () {
+                    lNotify_e.alert('close');
+                }, 10000);
+                lNotify_e.appendTo($("#notifies"));
+            }
+        };
+
+        function showErrorMessages(xhr) {
+            var json = JSON.parse(xhr.responseText);
+            for (var key in json.errors) {
+                if (json.errors.hasOwnProperty(key)) {
+                    json.errors[key].forEach(function (val) {
+                        Notify.generate(val, 'Ошибка', 3);
+                    });
+                }
+            }
+            if(json.message) {
+                Notify.generate(json.message,'Warning. ', 2);
+            }
+        }
+    </script>
 </div>
 </body>
 </html>

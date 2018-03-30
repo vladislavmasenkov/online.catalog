@@ -9,6 +9,18 @@ body html {
 
 .card-body {
     padding: 10px;
+    position: relative;
+}
+
+.card-body.droppable:after {
+    content: '';
+    display: block;
+    position: absolute;
+    width:100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    border:5px dashed #2b87bc;
 }
 
 .employees-list .card {
@@ -57,16 +69,22 @@ body html {
     border-radius: 50%;
     border: 3px dashed #fff;
 }
-.employee-form-edit #input-director {
+.employee-form #input-director {
     position: relative;
 }
 
-.employee-form-edit #input-director:hover {
+.employee-form #input-director:hover {
     cursor: pointer;
 }
-.employee-form-edit #input-director i{
+.employee-form #input-director .search-btn{
     position: absolute;
     right: 10px;
+    height: 100%;
+    top: 10px;
+}
+.employee-form #input-director .delete-btn{
+    position: absolute;
+    right: 30px;
     height: 100%;
     top: 10px;
 }

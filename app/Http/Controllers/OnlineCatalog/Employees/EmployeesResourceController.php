@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Employee;
 use Illuminate\Support\Facades\Input;
-
 class EmployeesResourceController extends Controller
 {
     /**
@@ -80,7 +79,7 @@ class EmployeesResourceController extends Controller
         return response()->json([
             'success' => true,
             'message' => \Lang::get('messages.SuccessEmployeeStore')
-        ]);
+        ],400);
     }
 
     /**
@@ -149,7 +148,7 @@ class EmployeesResourceController extends Controller
         return response()->json([
             'success' => false,
             'message' => \Lang::get('messages.FailEmployeeUpdate')
-        ]);
+        ],400);
     }
 
     /**
@@ -171,7 +170,7 @@ class EmployeesResourceController extends Controller
         return response()->json([
             'success' => false,
             'message' => \Lang::get('messages.FailEmployeeDestroy')
-        ]);
+        ],400);
     }
 
     /**
@@ -192,18 +191,38 @@ class EmployeesResourceController extends Controller
         return response()->json([
             'success' => false,
             'message' => \Lang::get('messages.FailEmployeeDestroyMany')
-        ]);
+        ],400);
     }
 
-    public function directors(Request $request,$id) {
+    public function getDirectors(Request $request,$id) {
         $directors = Employee::getPossibleDirectors($id,7);
         if(request()->ajax()) {
-            return view('onlinecatalog.employees.resource.ajaxdirectors',[
+            return view('onlinecatalog.employees.resource.directors',[
                 'employees' => $directors
             ])->render();
         }
-        return view('onlinecatalog.employees.resource.ajaxdirectors',[
+        return view('onlinecatalog.employees.resource.directors',[
             'employees' => $directors
         ]);
+    }
+
+    public function updateDirector(Request $request,$id) {
+        $this->validate($request,[
+            'director_id' => 'integer|required'
+        ]);
+
+        $employee = Employee::find($id);
+        if($employee) {
+            $employee->director_id = $request->input('director_id');
+            $employee->save();
+            return response()->json([
+                'success' => true,
+                'message' => \Lang::get('messages.SuccessUpdateDirector')
+            ]);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => \Lang::get('messages.FailUpdateDirector')
+        ],400);
     }
 }

@@ -63,7 +63,8 @@
                             <input class="d-inline-block form-control form-inline"
                                    value="@if($employee->director_id){{$employee->director->first_name}} {{$employee->director->last_name}}@endif"
                                    name="director" data-directorid="{{$employee->director_id or 0}}">
-                            <i class="fa fa-search" aria-hidden="true"></i>
+                            <i class="fa fa-close delete-btn" aria-hidden="true"></i>
+                            <i class="fa fa-search search-btn" aria-hidden="true"></i>
                         </div>
                     </div>
                 </div>
@@ -80,41 +81,3 @@
 
     </div>
 </div>
-<script>
-    $(document).on('click', '.employee-form #input-director', function () {
-        var employeeid = $(this).parents('.employee-form').data('employee-id');
-        $.ajax({
-            method: 'GET',
-            url: 'employees/directors/' + ((employeeid)?employeeid:0),
-            headers: {
-                'X-CSRF-TOKEN': '{{csrf_token()}}'
-            }
-        }).done(function (result) {
-            $('#employee-director-modal').html(result);
-            $('#employee-director-modal').modal('show');
-        }).fail(function (result) {
-            showErrorMessages(result);
-        });
-    });
-
-    $(document).on('click', '#employee-director-modal li.director-list-item', function (event) {
-        $('#input-director input').data('directorid', $(this).data('employee-id'));
-        $('#input-director input').val($(this).find('.employee-item-name').text());
-        $('#employee-director-modal').modal('hide');
-    });
-
-    $(document).on('click','#employee-director-modal .pagination a',function(event){
-        event.preventDefault();
-        $.ajax({
-            method: 'GET',
-            url: $(this).prop('href'),
-            headers: {
-                'X-CSRF-TOKEN': '{{csrf_token()}}'
-            }
-        }).done(function (result) {
-            $('#employee-director-modal').html(result);
-        }).fail(function (result) {
-            showErrorMessages(result);
-        });
-    });
-</script>

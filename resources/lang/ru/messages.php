@@ -9,6 +9,8 @@ return [
     'SuccessEmployeeDestroy' => 'Запись успешно удалена',
     'FailEmployeeDestroy' => 'Ошибка удаления записи',
     'SuccessEmployeeDestroyMany' => 'Выбраные записи успешно удалены',
-    'FailEmployeeDestroyMany' => 'Ошибка удаление записей'
+    'FailEmployeeDestroyMany' => 'Ошибка удаление записей',
+    'SuccessUpdateDirector' => 'Начальник успешно изменен',
+    'FailUpdateDirector' => 'Ошибибка. Начальник не был изменен'
 
 ];

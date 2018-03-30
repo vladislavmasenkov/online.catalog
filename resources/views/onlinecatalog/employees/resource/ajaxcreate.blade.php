@@ -51,12 +51,11 @@
                     </div>
                     <div class="form-group">
                         <label for="input-director">Начальник</label>
-                        <select id="input-director" class="form-control" name="director">
-                            <option value="0">-</option>
-                            {{--@foreach($directors as $director)--}}
-                            {{--<option value="{{$director->id}}">{{$director->first_name}} {{$director->last_name}}</option>--}}
-                            {{--@endforeach--}}
-                        </select>
+                        <div id="input-director">
+                            <input class="d-inline-block form-control form-inline" value="" name="director" data-directorid="0">
+                            <i class="fa fa-close delete-btn" aria-hidden="true"></i>
+                            <i class="fa fa-search search-btn" aria-hidden="true"></i>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -70,5 +69,3 @@
 
     </div>
 </div>
-
-<div id="employee-director-modal" class="modal fade" role="dialog"></div>

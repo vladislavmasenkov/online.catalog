@@ -21,8 +21,10 @@ Route::get('/employees/{id}/workers', 'OnlineCatalog\Employees\EmployeesFrontend
 Route::group(['middleware' => ['auth']], function () {
     Route::delete('employees/destroy', 'OnlineCatalog\Employees\EmployeesResourceController@destroyMany')
         ->name('employees.destroymany');
-    Route::get('employees/directors/{id?}', 'OnlineCatalog\Employees\EmployeesResourceController@directors')
+    Route::get('employees/{id}/directors', 'OnlineCatalog\Employees\EmployeesResourceController@getDirectors')
         ->name('employees.directors');
+    Route::put('employees/{id}/director', 'OnlineCatalog\Employees\EmployeesResourceController@updateDirector')
+        ->name('employees.director');
     Route::resource('employees', 'OnlineCatalog\Employees\EmployeesResourceController');
 });
 

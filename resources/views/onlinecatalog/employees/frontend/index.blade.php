@@ -14,7 +14,7 @@
                             {{$employee->position->name}}
                         </a>
                     </div>
-                    <div id="employee-{{$employee->id}}-workers" class="card-collapse collapse">
+                    <div id="employee-{{$employee->id}}-workers" class="employee-workers card-collapse collapse">
                         <div class="card-body">
                             <div class="card">
                                 <div class="row employee-cart">
@@ -42,7 +42,7 @@
                                             </a>
                                         </div>
                                         <div id="employee-{{$worker->id}}-workers"
-                                             class="card-collapse collapse">
+                                             class="employee-workers card-collapse collapse">
                                             <div class="card-body">
                                             </div>
                                         </div>
@@ -67,6 +67,98 @@
                     url: action
                 }).done(function (result) {
                     employee_workers.html(result);
+                    $('.employees-list .card').draggable({
+                        axis: "y",
+                        refreshPositions:true,
+                        revert: true,
+                        opacity: 0.5,
+                        cursor: "pointer",
+                        zIndex:100
+                    });
+                    $('.employee-workers .card-body').droppable({
+                        accept:'.employees-list .card',
+                        greedy:true,
+                        deactivate: function(event,ui) {
+                            $(this).removeClass('droppable');
+                        },
+                        over: function (event,ui) {
+                            $(this).addClass('droppable');
+                        },
+                        out: function (event,ui) {
+                            $(this).removeClass('droppable');
+                        },
+                        drop:function(event,ui){
+                            var droppable = $(this);
+                            var employee_id = $(ui.draggable).find('.card-header a').data('employee-id');
+                            var director_id = $(this).parents('.employee-workers').parents('.card').find('.card-header a').data('employee-id');
+
+                            var formdata = new FormData();
+                            formdata.append('director_id',director_id);
+                            formdata.append('_token', '{{csrf_token()}}');
+                            formdata.append('_method', 'PUT');
+
+                            $.ajax({
+                                method:'POST',
+                                url:'/employees/'+employee_id+'/director',
+                                processData: false,
+                                contentType: false,
+                                data: formdata
+                            }).done(function(result){
+                                droppable.append(ui.draggable);
+                                Notify.generate(result.message,'Готово',0);
+                            }).fail(function(result) {
+                                showErrorMessages(result);
+                            });
+                        }
+                    });
+                }).fail(function(result) {
+                    showErrorMessages(result);
+                });
+            }
+        });
+
+
+        $('.employees-list .card').draggable({
+            axis: "y",
+            refreshPositions:true,
+            revert: true,
+            opacity: 0.5,
+            cursor: "pointer",
+            zIndex:100
+        });
+        $('.employee-workers .card-body').droppable({
+            accept:'.employees-list .card',
+            greedy:true,
+            deactivate: function(event,ui) {
+                $(this).removeClass('droppable');
+            },
+            over: function (event,ui) {
+                $(this).addClass('droppable');
+            },
+            out: function (event,ui) {
+                $(this).removeClass('droppable');
+            },
+            drop:function(event,ui){
+                var droppable = $(this);
+                var employee_id = $(ui.draggable).find('.card-header a').data('employee-id');
+                var director_id = $(this).parents('.employee-workers').parents('.card').find('.card-header a').data('employee-id');
+
+                var formdata = new FormData();
+                formdata.append('director_id',director_id);
+                formdata.append('_token', '{{csrf_token()}}');
+                formdata.append('_method', 'PUT');
+
+                $.ajax({
+                    method:'POST',
+                    url:'/employees/'+employee_id+'/director',
+                    processData: false,
+                    contentType: false,
+                    data: formdata
+                }).done(function(result){
+                    droppable.append(ui.draggable);
+                    Notify.generate(result.message,'Готово',0);
+                }).fail(function(result) {
+                    showErrorMessages(result);
                 });
             }
         });
