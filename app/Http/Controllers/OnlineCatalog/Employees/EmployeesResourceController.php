@@ -79,7 +79,7 @@ class EmployeesResourceController extends Controller
         return response()->json([
             'success' => true,
             'message' => \Lang::get('messages.SuccessEmployeeStore')
-        ],400);
+        ]);
     }
 
     /**
@@ -194,6 +194,12 @@ class EmployeesResourceController extends Controller
         ],400);
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     */
+
     public function getDirectors(Request $request,$id) {
         $directors = Employee::getPossibleDirectors($id,7);
         if(request()->ajax()) {
@@ -205,6 +211,12 @@ class EmployeesResourceController extends Controller
             'employees' => $directors
         ]);
     }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
 
     public function updateDirector(Request $request,$id) {
         $this->validate($request,[

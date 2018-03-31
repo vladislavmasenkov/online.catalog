@@ -11,6 +11,8 @@ return [
     'SuccessEmployeeDestroyMany' => 'Выбраные записи успешно удалены',
     'FailEmployeeDestroyMany' => 'Ошибка удаление записей',
     'SuccessUpdateDirector' => 'Начальник успешно изменен',
-    'FailUpdateDirector' => 'Ошибибка. Начальник не был изменен'
+    'FailUpdateDirector' => 'Ошибибка. Начальник не был изменен',
+    'notFoundResult'=>'Ничего не найдено!',
+    'backToMainPage' => 'Вернуться на главную'
 
 ];

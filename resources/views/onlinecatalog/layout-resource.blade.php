@@ -198,7 +198,6 @@
             }
         });
 
-
         $(document).on('click', '.employees-navbar input.employee-item-chekbox', function () {
             $('.employees-list .employees-list-item input.employee-item-chekbox').prop('checked', (this.checked) ? true : false);
         });
@@ -217,7 +216,6 @@
         };
 
         function reloadList() {
-            history.pushState(null, null, '?page=' + $('input#page').val());
             var params = {
                 orderby: $('input#orderby').val(),
                 order: $('input#order').val(),
@@ -284,11 +282,6 @@
                 this.input = input;
                 this.tagsblock = tagsblock;
                 this.fieldsblock = fieldsblock;
-                this.onChangeInput();
-                this.onSelectField();
-                this.deleteTags();
-            },
-            onChangeInput: function () {
                 $(this.input).on('input', function () {
                     if ($(this).val()) {
                         var selectItems = {};
@@ -309,8 +302,6 @@
                         Search.fieldsblock.prop('hidden', true);
                     }
                 });
-            },
-            onSelectField: function () {
                 $(this.fieldsblock).on('click', '.fields-item', function () {
                     if (Search.selected[$(this).attr('name')]) {
                         Search.selected[$(this).attr('name')].queries.push(Search.input.val());
@@ -323,13 +314,7 @@
                     Search.fieldsblock.prop('hidden', true);
                     Search.input.val('');
                 });
-            },
-            addTag: function (field_name, query) {
-                this.tagsblock.append('<div  class="item-tags d-inline-block" data-name="' + field_name + '" data-query="' + query + '">' + query + '<span class="fa fa-close"></span></div>');
-                $('input#page').val(1);
-                reloadList();
-            },
-            deleteTags: function () {
+
                 $(this.tagsblock).on('click', '.item-tags span', function () {
                     Search.selected[$(this).parent('.item-tags').data('name')].queries.splice(
                         Search.selected[$(this).parent('.item-tags').data('name')].queries.indexOf(
@@ -341,6 +326,12 @@
                     reloadList();
                 });
             },
+            addTag: function (field_name, query) {
+                this.tagsblock.append('<div  class="item-tags d-inline-block" data-name="' + field_name + '" data-query="' + query + '">' + query + '<span class="fa fa-close"></span></div>');
+                $('input#page').val(1);
+                history.pushState(null, null, '?page=' + $('input#page').val());
+                reloadList();
+            },
             getSelected: function () {
                 return this.selected;
             },
@@ -348,7 +339,6 @@
                 return JSON.stringify(this.selected);
             }
         };
-
         Search.init($('input#filter-input'), $('div#filter-tags'), $('div#filter-fields'));
 
 

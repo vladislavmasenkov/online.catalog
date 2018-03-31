@@ -42,6 +42,7 @@
 @endsection
 
 @section('employees-list')
+    @if($employees->items())
     <div class="employees-list-block">
         <div class="row">
             <div class="col-md-12 col-xs-12 employees-list">
@@ -69,4 +70,21 @@
             </div>
         </div>
     </div>
+    @else
+        <div class="row">
+            <div class="col-md-12 col-xs-12 not-found-result">
+                <div class="content d-inline-flex">
+                    <div class="not-found-img">
+                        <img src="{{asset('images/onlinecatalog/other/notfoundresult.png')}}">
+                    </div>
+                    <div class="not-found-message">
+                        <div class="message">{{Lang::get('messages.notFoundResult')}}</div>
+                        <div class="link"><a
+                                    href="{{route('employees.index')}}">{{Lang::get('messages.backToMainPage')}}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 @endsection
